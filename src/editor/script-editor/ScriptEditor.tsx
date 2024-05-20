@@ -903,6 +903,8 @@ export const ScriptEditor = (props: {
         closeDialog={() => {
           setCompileDialogIsOpen(false);
         }}
+        id={id}
+        compiler={props.compiler}
       />
     </div>
   );
