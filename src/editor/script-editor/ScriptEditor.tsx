@@ -34,6 +34,7 @@ import {
   binToHex,
   BuiltInVariables,
   CompilationResult,
+  CompilerBCH,
   containsRange,
   extractUnexecutedRanges,
   Range,
@@ -201,6 +202,7 @@ const updateMarkers =
   };
 
 export const ScriptEditor = (props: {
+  compiler: CompilerBCH;
   frame: ScriptEditorFrame<IDESupportedProgramState>;
   isP2SH: boolean;
   isPushed: boolean;

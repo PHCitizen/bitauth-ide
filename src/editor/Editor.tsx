@@ -14,7 +14,7 @@ import { ImportExportDialog } from './dialogs/import-export-dialog/ImportExportD
 import { ImportScriptDialog } from './dialogs/import-script-dialog/ImportScriptDialog';
 import { NewEntityDialog } from './dialogs/new-entity-dialog/NewEntityDialog';
 import { NewScriptDialog } from './dialogs/new-script-dialog/NewScriptDialog';
-import { computeEditorState } from './editor-state';
+import { computeEditorState, getCompiler } from './editor-state';
 import {
   ComputedEditorState,
   EditorStateScriptMode,
@@ -36,6 +36,7 @@ import { WelcomePane } from './welcome-pane/WelcomePane';
 import { useCallback, useEffect, useState } from 'react';
 import { Mosaic } from 'react-mosaic-component';
 import { connect } from 'react-redux';
+import { CompilerBCH } from '@bitauth/libauth';
 
 const enum Pane {
   projectExplorer = 'projectExplorerPane',
@@ -64,6 +65,7 @@ type EditorDispatch = {
 
 type EditorProps<ProgramState extends IDESupportedProgramState> = {
   computed: ComputedEditorState<ProgramState>;
+  compiler: CompilerBCH;
   currentlyEditingInternalId: string | undefined;
   currentScripts: CurrentScripts;
   activeDialog: ActiveDialog;
@@ -79,6 +81,7 @@ export const Editor = connect(
     activeDialog: state.activeDialog,
     evaluationViewerSettings: state.evaluationViewerSettings,
     usedIds: getUsedIds(state),
+    compiler: getCompiler(state).compiler,
   }),
   {
     closeDialog: ActionCreators.closeDialog,
@@ -186,6 +189,7 @@ export const Editor = connect(
     indexFromTop: 0 | 1 | 2,
   ) => (
     <ScriptEditor
+      compiler={props.compiler}
       assignScriptModel={props.assignScriptModel}
       deleteScript={props.deleteScript}
       editScript={props.editScript}
