@@ -33,8 +33,14 @@
       }
     }
 
-    .script-buttons {
+    .script-buttons-parent {
       flex-grow: 1;
+      display: flex;
+      align-items: center;
+      justify-content: end;
+    }
+
+    .script-buttons {
       text-align: right;
       line-height: 0;
       color: var(--toolbar-icon-color);
