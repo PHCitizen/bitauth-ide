@@ -9,6 +9,8 @@ import {
   Dialog,
   FormGroup,
   InputGroup,
+  Radio,
+  RadioGroup,
   Section,
   SectionCard,
 } from '@blueprintjs/core';
@@ -394,7 +396,7 @@ export const CompileScriptDialog = ({
   id: string;
   compiler: CompilerBCH;
 }) => {
-  const network = 'mainnet';
+  const [network, setNetwork] = useState<Networks>('mainnet');
   const [compilationData, setCompilationData] = useState<CompileScriptData>(
     JSON.parse(DEFAULT_COMPILATION_DATA),
   );
@@ -458,7 +460,7 @@ export const CompileScriptDialog = ({
           lockingBytecode = encodeLockingBytecodeP2sh20(hash160(bytecode));
       }
 
-      const addressFormat = 'bitcoincash';
+      const addressFormat = network === 'mainnet' ? 'bitcoincash' : 'bchtest';
       const _cashAddress = lockingBytecodeToCashAddress(
         lockingBytecode,
         addressFormat,
@@ -488,6 +490,17 @@ export const CompileScriptDialog = ({
       canOutsideClickClose={false}
     >
       <div className={Classes.DIALOG_BODY}>
+        <FormGroup label="Network" inline={true}>
+          <RadioGroup
+            onChange={(e) => {
+              setNetwork(e.currentTarget.value as Networks);
+            }}
+            selectedValue={network}
+          >
+            <Radio label="mainnet" value="mainnet" />
+            <Radio label="testnet" value="testnet" />
+          </RadioGroup>
+        </FormGroup>
         <FormGroup
           label="Variables"
           inline={true}
