@@ -34,6 +34,7 @@ import {
   binToHex,
   BuiltInVariables,
   CompilationResult,
+  CompilerBCH,
   containsRange,
   extractUnexecutedRanges,
   Range,
@@ -41,10 +42,11 @@ import {
   ScriptReductionTraceChildNode,
   ScriptReductionTraceScriptNode,
 } from '@bitauth/libauth';
-import { Settings } from '@blueprintjs/icons';
+import { Settings, Build } from '@blueprintjs/icons';
 import { Editor } from '@monaco-editor/react';
 import * as MonacoEditor from 'monaco-editor/esm/vs/editor/editor.api';
 import React, { useEffect, useState } from 'react';
+import { CompileScriptDialog } from '../dialogs/compile-script-dialog/CompileScriptDialog';
 
 const cursorIsAtEndOfRange = (
   cursor: { column: number; lineNumber: number },
@@ -201,6 +203,7 @@ const updateMarkers =
   };
 
 export const ScriptEditor = (props: {
+  compiler: CompilerBCH;
   frame: ScriptEditorFrame<IDESupportedProgramState>;
   isP2SH: boolean;
   isPushed: boolean;
@@ -231,6 +234,7 @@ export const ScriptEditor = (props: {
     undefined as undefined | typeof MonacoEditor,
   );
   const [editScriptDialogIsOpen, setEditScriptDialogIsOpen] = useState(false);
+  const [compileDialogIsOpen, setCompileDialogIsOpen] = useState(false);
   const [activeHints, setActiveHints] = useState(
     undefined as ActiveHint[] | undefined,
   );
@@ -819,13 +823,28 @@ export const ScriptEditor = (props: {
             Pushed
           </span>
         )}
-        <div
-          className="script-buttons"
-          onClick={() => {
-            setEditScriptDialogIsOpen(true);
-          }}
-        >
-          {wrapInterfaceTooltip(<Settings size={10} />, 'Edit Script Settings')}
+        <div className="script-buttons-parent">
+          {scriptType === 'locking' && (
+            <div
+              className="script-buttons"
+              onClick={() => {
+                setCompileDialogIsOpen(true);
+              }}
+            >
+              {wrapInterfaceTooltip(<Build size={10} />, 'Compile Script')}
+            </div>
+          )}
+          <div
+            className="script-buttons"
+            onClick={() => {
+              setEditScriptDialogIsOpen(true);
+            }}
+          >
+            {wrapInterfaceTooltip(
+              <Settings size={10} />,
+              'Edit Script Settings',
+            )}
+          </div>
         </div>
       </h2>
       <div className="editor">
@@ -878,6 +897,14 @@ export const ScriptEditor = (props: {
         usedIds={props.usedIds}
         editScript={props.editScript}
         deleteScript={props.deleteScript}
+      />
+      <CompileScriptDialog
+        isOpen={compileDialogIsOpen}
+        closeDialog={() => {
+          setCompileDialogIsOpen(false);
+        }}
+        id={id}
+        compiler={props.compiler}
       />
     </div>
   );

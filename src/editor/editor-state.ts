@@ -72,6 +72,19 @@ const wrapScriptReductionInPush = <ProgramState>(
   } as ScriptReductionTraceScriptNode<ProgramState>;
 };
 
+export const getCompiler = (state: AppState) => {
+  const template = exportWalletTemplate(state.currentTemplate, true);
+  const configuration = walletTemplateToCompilerConfiguration(template);
+  const vm =
+    state.currentVmId === 'BCH_2023_05'
+      ? createVirtualMachineBCH2023()
+      : createVirtualMachineBCHCHIPs();
+  // FIXME: should pass vm?
+  const compiler = createCompiler(configuration);
+
+  return { template, compiler, vm };
+};
+
 export const computeEditorState = <
   ProgramState extends IDESupportedProgramState,
 >(
@@ -101,13 +114,8 @@ export const computeEditorState = <
   if (currentlyEditingInternalId === undefined) {
     return { editorMode: ProjectEditorMode.templateSettingsEditor };
   }
-  const template = exportWalletTemplate(state.currentTemplate, true);
-  const configuration = walletTemplateToCompilerConfiguration(template);
-  const vm =
-    state.currentVmId === 'BCH_2023_05'
-      ? createVirtualMachineBCH2023()
-      : createVirtualMachineBCHCHIPs();
-  const compiler = createCompiler(configuration);
+
+  const { compiler, vm } = getCompiler(state);
 
   /**
    * Map variable InternalIds to entity InternalIds

@@ -1,0 +1,43 @@
+.CompileScriptDialog {
+  .bp5-form-group.max-content .bp5-form-content {
+    width: 100%;
+  }
+
+  .form-group-with-btn .bp5-form-content {
+    display: flex;
+
+    .bp5-input-group {
+      width: 100%;
+    }
+  }
+
+  .mb-0 {
+    margin-bottom: 0;
+  }
+
+  .mb-15 {
+    margin-bottom: 15px;
+  }
+
+  .bp5-icon {
+    user-select: none;
+  }
+
+  .error-block {
+    background-color: #cd424633;
+    color: #fa999c;
+    border-radius: 2px;
+
+    /* 
+     * if padding is added even without errors, a red empty box appear on UI
+     * add some padding, if we have error-item
+     */
+    &:has(.error-item) {
+      padding: 10px;
+    }
+  }
+
+  .bp5-section:has(.error-item) {
+    border: 1px solid #fa999c;
+  }
+}
